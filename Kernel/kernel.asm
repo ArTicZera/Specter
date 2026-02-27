@@ -16,9 +16,13 @@ KernelMain:
         mov     ax, 0x13
         int     0x10
 
-        mov     ah, 0x0E
-        mov     al, 'V'
-        mov     bl, 0x0A
-        int     0x10
+        mov     si, str1
+        mov     al, 0x0F
+        call    PrintString
 
         jmp     $
+
+str1: db "HELLO, WORLD!", 0x00
+
+%include "Kernel/font.asm"
+%include "Kernel/graphics.asm"
