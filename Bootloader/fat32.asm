@@ -7,7 +7,9 @@ ReadRootDir:
 
         ;Setup RootDirBuffer
         mov     si, RootDirBuffer
+        ret
 
+%ifndef FAT_NO_BOOTLOADER_ROUTINES
 FindKernel:
         cmp     byte [si], 0x00
         je      KernelNotFound
@@ -48,6 +50,7 @@ KernelFound:
 KernelNotFound:
         cli
         hlt
+%endif
 
 ReadSectorLBA:
         pusha
@@ -72,7 +75,22 @@ DiskError:
         cli
         hlt
 
-BootDiskNumber: db 0x00
+GetRootDirNames:
+        xor     ax, ax
+.NextEntry:
+        cmp     byte [si], 0x00
+        je      .Done
+        mov     cx, 11
+        rep     movsb
+        mov     byte [di], 0x00 ; string terminator
+        add     si, 21
+        inc     di
+        inc     ax ; string count
+        jmp     .NextEntry
+.Done:
+        ret
+
+BootDiskNumber: equ 0x6fff
 
 DAP:
     db 0x10
@@ -83,3 +101,4 @@ DAP:
     dq 0x00
 
 RootDirBuffer equ 0x8000
+RootDirBufferSegment equ 0x0000

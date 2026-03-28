@@ -66,8 +66,9 @@ BootMain:
         sti
 
         mov     [BootDiskNumber], dl
-
-        jmp     ReadRootDir
+        
+        call    ReadRootDir
+        jmp     FindKernel
 
 KernelBIN: db "KERNEL  BIN"
 KernelCluster: dw 0x00

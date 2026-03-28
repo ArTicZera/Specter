@@ -107,7 +107,7 @@ PrintString:
 
         .nextChar:
                 inc     si
-                mov     bx, [si]
+                mov     bl, [si]
 
                 cmp     bl, 0x0F
                 je      .endLine
